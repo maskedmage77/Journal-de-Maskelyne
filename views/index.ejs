@@ -1,0 +1,32 @@
+<html>
+    <%- include('./partials/head.ejs') %>
+    <body>
+        <%- include('./partials/nav.ejs') %>
+
+        <% if (posts.length > 0) { %>
+            <% posts.forEach(post => { %>
+            <a href="/posts/<%= post._id %>">
+                <div class="post">
+                    <img src="/post_image/<%- post.image %>" class="post_image_preview">
+                    <h2><%= post.title %></h2>
+                    <script>
+                        document.write(marked('<%- post.body %>'.substring(0,250) + '...'));
+                    </script>
+                    <script>
+                        document.write('<p>Author: '+'<%- post.author %>'+'</p>');
+                    </script>
+                </div>
+            </a>
+            <% }); %>
+        <% } else { %>
+
+            <div class="post">
+                <h2>No Posts</h2>
+                <p>
+                    There are zero posts to display.
+                </p>
+            </div>
+
+        <% }; %>
+    </body>
+</html>

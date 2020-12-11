@@ -1,0 +1,62 @@
+<html>
+    <%- include('./partials/head.ejs') %>
+    <body>
+        <%- include('./partials/nav.ejs') %>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <script>
+        $(document).ready(function(){
+
+            function search(){
+                $.ajax({
+            		'url': '/posts/search',
+            		'data': { 'title': $("#search_val").val() },
+            		'type': 'post',
+            		'dataType': 'json',
+		            'beforeSend': function () {
+                        $("div.post").remove();
+		            }
+            	})
+            	.done( function (response) {
+                    if (response.length > 0) {
+                        response.reverse().forEach(response => {
+                            $('body').append(
+                            '<a href="/posts/'+ response._id +'">' +
+                            '<div class="post"> ' +
+                            '<img src="/post_image/'+ response.image +'" class="post_image_preview">'+
+                            '<h2>'+ response.title +'</h2>' +
+                            marked(response.body.substring(0,250)+ '...') +
+                            '<p>Author: '+ response.author +'</p>' +
+                            '</div>');
+                        })
+                    }
+            	});
+            }
+
+            // listener for enter on searchbox
+            $('#search_val').bind("enterKey",function(e){
+               search();
+            });
+            $('#search_val').keyup(function(e){
+                if(e.keyCode == 13)
+                {$(this).trigger("enterKey");}
+            });
+
+            // listener for search button
+            $("#search").click(search);
+        });
+        </script>
+
+        <div class="search">
+            <p>
+                You can use this page to search for posts. 
+            </p>
+            <div class="search_div">
+                <input type="text" placeholder="Search.." id="search_val">
+                <button id="search">Search</button>
+            </div>
+        </div>
+
+    </body>
+</html>
